@@ -12,7 +12,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Table(name: 'payment_idempotency_keys')]
 #[ORM\UniqueConstraint(name: 'uniq_payment_idempotency_operation_key', fields: ['operation', 'idempotencyKey'])]
 #[ORM\Index(name: 'idx_payment_idempotency_payment_id', fields: ['payment'])]
-class PaymentIdempotencyKey
+final class PaymentIdempotencyKey
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
@@ -24,7 +24,7 @@ class PaymentIdempotencyKey
     #[ORM\Column(name: 'idempotency_key', type: 'string', length: 128)]
     private string $idempotencyKey;
 
-    #[ORM\ManyToOne(targetEntity: Payment::class)]
+    #[ORM\ManyToOne(targetEntity: Payment::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(name: 'payment_id', referencedColumnName: 'id', nullable: false)]
     private Payment $payment;
 

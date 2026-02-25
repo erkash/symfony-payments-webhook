@@ -12,7 +12,7 @@ use Symfony\Component\Uid\Uuid;
 #[ORM\Table(name: 'webhook_events')]
 #[ORM\UniqueConstraint(name: 'uniq_webhook_provider_external_id', fields: ['provider', 'externalId'])]
 #[ORM\Index(fields: ['externalId'], name: 'idx_webhook_external_id')]
-class WebhookEvent
+final class WebhookEvent
 {
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]

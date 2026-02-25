@@ -15,7 +15,7 @@ use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'payments')]
-class Payment implements RecordsEventsInterface
+final class Payment implements RecordsEventsInterface
 {
     use RecordsEventsTrait;
     #[ORM\Id]
