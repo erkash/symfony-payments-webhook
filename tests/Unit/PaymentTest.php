@@ -6,6 +6,8 @@ namespace App\Tests\Unit;
 
 use App\Payments\Domain\Payment;
 use App\Payments\Domain\PaymentStatus;
+use App\Payments\Domain\ValueObject\Currency;
+use App\Payments\Domain\ValueObject\Money;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Uid\Uuid;
 
@@ -13,7 +15,7 @@ final class PaymentTest extends TestCase
 {
     public function testPaymentStartsPendingAndAppliesValidTransitions(): void
     {
-        $payment = new Payment(Uuid::v4(), 1500, 'usd');
+        $payment = new Payment(Uuid::v4(), new Money(1500, new Currency('USD')));
 
         self::assertSame(PaymentStatus::Pending, $payment->getStatus());
 
@@ -28,7 +30,7 @@ final class PaymentTest extends TestCase
 
     public function testPaymentIgnoresInvalidTransitions(): void
     {
-        $payment = new Payment(Uuid::v4(), 1500, 'usd');
+        $payment = new Payment(Uuid::v4(), new Money(1500, new Currency('USD')));
 
         $updated = $payment->updateStatus(PaymentStatus::Succeeded);
         self::assertFalse($updated);

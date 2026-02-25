@@ -8,6 +8,7 @@ use App\Payments\Domain\Event\PaymentCreated;
 use App\Payments\Domain\Event\PaymentStatusChanged;
 use App\Payments\Domain\Event\RecordsEventsInterface;
 use App\Payments\Domain\Event\RecordsEventsTrait;
+use App\Payments\Domain\ValueObject\Money;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
@@ -20,11 +21,8 @@ class Payment implements RecordsEventsInterface
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
 
-    #[ORM\Column(type: 'integer')]
-    private int $amount;
-
-    #[ORM\Column(type: 'string', length: 3)]
-    private string $currency;
+    #[ORM\Embedded(class: Money::class, columnPrefix: false)]
+    private Money $money;
 
     #[ORM\Column(type: 'string', length: 32, enumType: PaymentStatus::class)]
     private PaymentStatus $status;
@@ -35,17 +33,16 @@ class Payment implements RecordsEventsInterface
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $updatedAt;
 
-    public function __construct(Uuid $id, int $amount, string $currency)
+    public function __construct(Uuid $id, Money $money)
     {
         $this->id = $id;
-        $this->amount = $amount;
-        $this->currency = strtoupper($currency);
+        $this->money = $money;
         $this->status = PaymentStatus::Pending;
         $now = new \DateTimeImmutable();
         $this->createdAt = $now;
         $this->updatedAt = $now;
 
-        $this->recordEvent(new PaymentCreated($id, $amount, $this->currency, $this->status));
+        $this->recordEvent(new PaymentCreated($id, $money, $this->status));
     }
 
     public function getId(): Uuid
@@ -53,14 +50,9 @@ class Payment implements RecordsEventsInterface
         return $this->id;
     }
 
-    public function getAmount(): int
+    public function getMoney(): Money
     {
-        return $this->amount;
-    }
-
-    public function getCurrency(): string
-    {
-        return $this->currency;
+        return $this->money;
     }
 
     public function getStatus(): PaymentStatus

@@ -20,8 +20,8 @@ final readonly class PaymentCreatedListener
     {
         $this->logger->info('Payment created', [
             'paymentId' => $event->paymentId->toRfc4122(),
-            'amount' => $event->amount,
-            'currency' => $event->currency,
+            'amount' => $event->money->getAmount(),
+            'currency' => $event->money->getCurrency()->code,
             'status' => $event->status->value,
             'occurredOn' => $event->occurredOn()->format(DATE_ATOM),
         ]);

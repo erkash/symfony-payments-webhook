@@ -8,6 +8,8 @@ use App\Payments\Application\Dto\CreatePaymentRequest;
 use App\Payments\Application\Result\CreatePaymentResult;
 use App\Payments\Domain\Payment;
 use App\Payments\Domain\PaymentIdempotencyKey;
+use App\Payments\Domain\ValueObject\Currency;
+use App\Payments\Domain\ValueObject\Money;
 use App\Payments\Infrastructure\Repository\PaymentIdempotencyKeyRepository;
 use App\Payments\Infrastructure\Repository\PaymentRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -38,7 +40,7 @@ final readonly class CreatePaymentIdempotency
 
     private function createWithoutIdempotency(CreatePaymentRequest $dto): CreatePaymentResult
     {
-        $payment = new Payment(Uuid::v4(), $dto->amount, $dto->currency);
+        $payment = new Payment(Uuid::v4(), new Money($dto->amount, new Currency($dto->currency)));
         $this->payments->save($payment);
         $this->entityManager->flush();
 
@@ -52,7 +54,7 @@ final readonly class CreatePaymentIdempotency
         $this->entityManager->beginTransaction();
 
         try {
-            $payment = new Payment(Uuid::v4(), $dto->amount, $dto->currency);
+            $payment = new Payment(Uuid::v4(), new Money($dto->amount, new Currency($dto->currency)));
             $this->payments->save($payment);
 
             $key = new PaymentIdempotencyKey(

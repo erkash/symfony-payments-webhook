@@ -12,8 +12,8 @@ final class PaymentPresenter
     {
         return [
             'id' => $payment->getId()->toRfc4122(),
-            'amount' => $payment->getAmount(),
-            'currency' => $payment->getCurrency(),
+            'amount' => $payment->getMoney()->getAmount(),
+            'currency' => $payment->getMoney()->getCurrency()->code,
             'status' => $payment->getStatus()->value,
             'createdAt' => $payment->getCreatedAt()->format(DATE_ATOM),
             'updatedAt' => $payment->getUpdatedAt()->format(DATE_ATOM),
