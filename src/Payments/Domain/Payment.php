@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace App\Payments\Domain;
 
+use App\Payments\Domain\Event\PaymentCreated;
+use App\Payments\Domain\Event\PaymentStatusChanged;
+use App\Payments\Domain\Event\RecordsEventsInterface;
+use App\Payments\Domain\Event\RecordsEventsTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'payments')]
-class Payment
+class Payment implements RecordsEventsInterface
 {
+    use RecordsEventsTrait;
     #[ORM\Id]
     #[ORM\Column(type: 'uuid', unique: true)]
     private Uuid $id;
@@ -39,6 +44,8 @@ class Payment
         $now = new \DateTimeImmutable();
         $this->createdAt = $now;
         $this->updatedAt = $now;
+
+        $this->recordEvent(new PaymentCreated($id, $amount, $this->currency, $this->status));
     }
 
     public function getId(): Uuid
@@ -81,8 +88,11 @@ class Payment
             return false;
         }
 
+        $previousStatus = $this->status;
         $this->status = $status;
         $this->touch();
+
+        $this->recordEvent(new PaymentStatusChanged($this->id, $previousStatus, $status));
 
         return true;
     }

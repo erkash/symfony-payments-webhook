@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Payments\Infrastructure\Messenger;
 
 use App\Payments\Application\Message\WebhookEventMessage;
+use App\Payments\Application\Service\DomainEventDispatcher;
 use App\Payments\Domain\PaymentStatus;
 use App\Payments\Infrastructure\Repository\PaymentRepository;
 use App\Payments\Infrastructure\Repository\WebhookEventRepository;
@@ -21,6 +22,7 @@ final readonly class WebhookEventHandler
         private PaymentRepository $payments,
         private EntityManagerInterface $entityManager,
         private LoggerInterface $logger,
+        private DomainEventDispatcher $eventDispatcher,
     ) {
     }
 
@@ -82,6 +84,7 @@ final readonly class WebhookEventHandler
         }
 
         $event->markProcessed();
+        $this->eventDispatcher->dispatch($payment);
         $this->entityManager->flush();
     }
 }

@@ -22,6 +22,7 @@ final readonly class CreatePaymentIdempotency
         private PaymentRepository $payments,
         private PaymentIdempotencyKeyRepository $idempotencyKeys,
         private EntityManagerInterface $entityManager,
+        private DomainEventDispatcher $eventDispatcher,
     ) {
     }
 
@@ -40,6 +41,8 @@ final readonly class CreatePaymentIdempotency
         $payment = new Payment(Uuid::v4(), $dto->amount, $dto->currency);
         $this->payments->save($payment);
         $this->entityManager->flush();
+
+        $this->eventDispatcher->dispatch($payment);
 
         return new CreatePaymentResult($payment, false);
     }
@@ -61,6 +64,7 @@ final readonly class CreatePaymentIdempotency
             $this->idempotencyKeys->save($key);
 
             $this->entityManager->flush();
+            $this->eventDispatcher->dispatch($payment);
             $this->entityManager->commit();
 
             return new CreatePaymentResult($payment, false);

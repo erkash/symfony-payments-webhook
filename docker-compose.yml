@@ -7,6 +7,9 @@ services:
       - ./:/var/www/html
     env_file:
       - .env
+    environment:
+      WEBHOOK_SECRET_STRIPE: change-me
+      WEBHOOK_SECRET_ADYEN: change-me
     depends_on:
       - mysql
       - redis
