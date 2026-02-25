@@ -88,7 +88,7 @@ final readonly class WebhookEventHandler
         }
 
         $event->markProcessed();
-        $this->eventDispatcher->dispatch($payment);
         $this->entityManager->flush();
+        $this->eventDispatcher->dispatch($payment);
     }
 }

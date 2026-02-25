@@ -66,8 +66,8 @@ final readonly class CreatePaymentIdempotency
             $this->idempotencyKeys->save($key);
 
             $this->entityManager->flush();
-            $this->eventDispatcher->dispatch($payment);
             $this->entityManager->commit();
+            $this->eventDispatcher->dispatch($payment);
 
             return new CreatePaymentResult($payment, false);
         } catch (UniqueConstraintViolationException $exception) {
