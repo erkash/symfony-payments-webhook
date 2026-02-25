@@ -34,6 +34,9 @@ services:
   App\Payments\Domain\Repository\WebhookEventRepositoryInterface:
     alias: App\Payments\Infrastructure\Repository\WebhookEventRepository
 
+  App\Payments\Application\Security\SignatureVerifierInterface:
+    alias: App\Payments\Infrastructure\HmacSignatureVerifier
+
   App\Payments\Infrastructure\HmacSignatureVerifier:
     arguments:
       $providerSecrets:

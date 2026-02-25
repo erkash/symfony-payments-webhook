@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Payments\Infrastructure;
 
-final class HmacSignatureVerifier
+use App\Payments\Application\Security\SignatureVerifierInterface;
+
+final class HmacSignatureVerifier implements SignatureVerifierInterface
 {
     /** @var array<string, string> */
     private array $providerSecrets;
