@@ -8,3 +8,10 @@ framework:
           delay: 1000        # 1 sec
           multiplier: 2      # exponential backoff
           max_delay: 10000   # 10 sec
+      failed:
+        dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+        options:
+          queue_name: failed
+
+    routing:
+      App\Payments\Application\Message\WebhookEventMessage: async
