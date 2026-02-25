@@ -6,7 +6,7 @@ namespace App\Payments\Infrastructure\Controller;
 
 use App\Payments\Application\Dto\CreatePaymentRequest;
 use App\Payments\Application\Handler\CreatePaymentHandler;
-use App\Payments\Infrastructure\Repository\PaymentRepository;
+use App\Payments\Domain\Repository\PaymentRepositoryInterface;
 use App\Payments\Infrastructure\Presenter\PaymentPresenter;
 use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
 final readonly class PaymentController
 {
     public function __construct(
-        private PaymentRepository $payments,
+        private PaymentRepositoryInterface $payments,
         private CreatePaymentHandler $createPaymentHandler,
         private PaymentPresenter $presenter,
     ) {

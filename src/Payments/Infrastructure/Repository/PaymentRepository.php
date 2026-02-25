@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\Payments\Infrastructure\Repository;
 
 use App\Payments\Domain\Payment;
+use App\Payments\Domain\Repository\PaymentRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
 
 /** @extends ServiceEntityRepository<Payment> */
-final class PaymentRepository extends ServiceEntityRepository
+final class PaymentRepository extends ServiceEntityRepository implements PaymentRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

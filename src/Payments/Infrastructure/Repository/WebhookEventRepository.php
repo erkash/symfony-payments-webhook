@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Payments\Infrastructure\Repository;
 
 use App\Payments\Domain\Provider;
+use App\Payments\Domain\Repository\WebhookEventRepositoryInterface;
 use App\Payments\Domain\WebhookEvent;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Uid\Uuid;
 
 /** @extends ServiceEntityRepository<WebhookEvent> */
-final class WebhookEventRepository extends ServiceEntityRepository
+final class WebhookEventRepository extends ServiceEntityRepository implements WebhookEventRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

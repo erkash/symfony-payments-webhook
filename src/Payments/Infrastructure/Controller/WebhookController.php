@@ -6,9 +6,9 @@ namespace App\Payments\Infrastructure\Controller;
 
 use App\Payments\Application\Message\WebhookEventMessage;
 use App\Payments\Domain\Provider;
+use App\Payments\Domain\Repository\WebhookEventRepositoryInterface;
 use App\Payments\Domain\WebhookEvent;
 use App\Payments\Infrastructure\HmacSignatureVerifier;
-use App\Payments\Infrastructure\Repository\WebhookEventRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +21,7 @@ final readonly class WebhookController
 {
     public function __construct(
         private HmacSignatureVerifier $signatureVerifier,
-        private WebhookEventRepository $events,
+        private WebhookEventRepositoryInterface $events,
         private EntityManagerInterface $entityManager,
         private MessageBusInterface $bus,
     ) {

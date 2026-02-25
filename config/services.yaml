@@ -25,6 +25,15 @@ services:
     arguments:
       $registry: '@doctrine'
 
+  App\Payments\Domain\Repository\PaymentRepositoryInterface:
+    alias: App\Payments\Infrastructure\Repository\PaymentRepository
+
+  App\Payments\Domain\Repository\PaymentIdempotencyKeyRepositoryInterface:
+    alias: App\Payments\Infrastructure\Repository\PaymentIdempotencyKeyRepository
+
+  App\Payments\Domain\Repository\WebhookEventRepositoryInterface:
+    alias: App\Payments\Infrastructure\Repository\WebhookEventRepository
+
   App\Payments\Infrastructure\HmacSignatureVerifier:
     arguments:
       $providerSecrets:

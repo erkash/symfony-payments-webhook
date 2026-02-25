@@ -8,8 +8,8 @@ use App\Payments\Application\Message\WebhookEventMessage;
 use App\Payments\Application\Service\DomainEventDispatcher;
 use App\Payments\Domain\Exception\InvalidPaymentStatusTransitionException;
 use App\Payments\Domain\PaymentStatus;
-use App\Payments\Infrastructure\Repository\PaymentRepository;
-use App\Payments\Infrastructure\Repository\WebhookEventRepository;
+use App\Payments\Domain\Repository\PaymentRepositoryInterface;
+use App\Payments\Domain\Repository\WebhookEventRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -19,8 +19,8 @@ use Symfony\Component\Uid\Uuid;
 final readonly class WebhookEventHandler
 {
     public function __construct(
-        private WebhookEventRepository $events,
-        private PaymentRepository $payments,
+        private WebhookEventRepositoryInterface $events,
+        private PaymentRepositoryInterface $payments,
         private EntityManagerInterface $entityManager,
         private LoggerInterface $logger,
         private DomainEventDispatcher $eventDispatcher,

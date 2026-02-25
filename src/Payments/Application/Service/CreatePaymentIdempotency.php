@@ -8,10 +8,10 @@ use App\Payments\Application\Dto\CreatePaymentRequest;
 use App\Payments\Application\Result\CreatePaymentResult;
 use App\Payments\Domain\Payment;
 use App\Payments\Domain\PaymentIdempotencyKey;
+use App\Payments\Domain\Repository\PaymentIdempotencyKeyRepositoryInterface;
+use App\Payments\Domain\Repository\PaymentRepositoryInterface;
 use App\Payments\Domain\ValueObject\Currency;
 use App\Payments\Domain\ValueObject\Money;
-use App\Payments\Infrastructure\Repository\PaymentIdempotencyKeyRepository;
-use App\Payments\Infrastructure\Repository\PaymentRepository;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Uuid;
@@ -21,8 +21,8 @@ final readonly class CreatePaymentIdempotency
     public const OPERATION_CREATE_PAYMENT = 'create_payment';
 
     public function __construct(
-        private PaymentRepository $payments,
-        private PaymentIdempotencyKeyRepository $idempotencyKeys,
+        private PaymentRepositoryInterface $payments,
+        private PaymentIdempotencyKeyRepositoryInterface $idempotencyKeys,
         private EntityManagerInterface $entityManager,
         private DomainEventDispatcher $eventDispatcher,
     ) {
