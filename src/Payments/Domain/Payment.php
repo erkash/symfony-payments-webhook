@@ -8,6 +8,7 @@ use App\Payments\Domain\Event\PaymentCreated;
 use App\Payments\Domain\Event\PaymentStatusChanged;
 use App\Payments\Domain\Event\RecordsEventsInterface;
 use App\Payments\Domain\Event\RecordsEventsTrait;
+use App\Payments\Domain\Exception\InvalidPaymentStatusTransitionException;
 use App\Payments\Domain\ValueObject\Money;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Uid\Uuid;
@@ -70,6 +71,10 @@ class Payment implements RecordsEventsInterface
         return $this->updatedAt;
     }
 
+    /**
+     * @return bool false if the status is already set (idempotent no-op), true if updated
+     * @throws InvalidPaymentStatusTransitionException if the transition is not allowed
+     */
     public function updateStatus(PaymentStatus $status): bool
     {
         if ($this->status === $status) {
@@ -77,7 +82,7 @@ class Payment implements RecordsEventsInterface
         }
 
         if (!$this->canTransitionTo($status)) {
-            return false;
+            throw new InvalidPaymentStatusTransitionException($this->id, $this->status, $status);
         }
 
         $previousStatus = $this->status;
