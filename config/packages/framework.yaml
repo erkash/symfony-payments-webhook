@@ -1,0 +1,19 @@
+framework:
+  secret: '%env(APP_SECRET)%'
+  http_method_override: false
+  handle_all_throwables: true
+  session:
+    enabled: false
+  php_errors:
+    log: true
+  cache:
+    app: cache.adapter.redis
+    default_redis_provider: '%env(REDIS_URL)%'
+  serializer:
+    enabled: true
+  validation:
+    enabled: true
+  router:
+    utf8: true
+  messenger:
+    reset_on_message: true

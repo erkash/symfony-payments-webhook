@@ -1,0 +1,32 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\:
+    resource: '../src/'
+    exclude:
+      - '../src/Kernel.php'
+
+  App\Payments\Infrastructure\Controller\:
+    resource: '../src/Payments/Infrastructure/Controller/'
+    tags: ['controller.service_arguments']
+    public: true
+
+  App\Payments\Infrastructure\Repository\PaymentRepository:
+    arguments:
+      $registry: '@doctrine'
+
+  App\Payments\Infrastructure\Repository\PaymentIdempotencyKeyRepository:
+    arguments:
+      $registry: '@doctrine'
+
+  App\Payments\Infrastructure\Repository\WebhookEventRepository:
+    arguments:
+      $registry: '@doctrine'
+
+  App\Payments\Infrastructure\HmacSignatureVerifier:
+    arguments:
+      $providerSecrets:
+        stripe: '%env(WEBHOOK_SECRET_STRIPE)%'
+        adyen: '%env(WEBHOOK_SECRET_ADYEN)%'

@@ -1,0 +1,19 @@
+#!/usr/bin/env php
+<?php
+
+use App\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
+if (!is_file(dirname(__DIR__).'/vendor/autoload.php')) {
+    fwrite(STDERR, "Run 'composer install' to install dependencies.\n");
+    exit(1);
+}
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$env = $_SERVER['APP_ENV'] ?? 'dev';
+$debug = (bool) ($_SERVER['APP_DEBUG'] ?? ('dev' === $env));
+
+$kernel = new Kernel($env, $debug);
+$application = new Application($kernel);
+$application->run();

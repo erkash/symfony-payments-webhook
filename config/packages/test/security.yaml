@@ -1,0 +1,11 @@
+security:
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    login:
+      pattern: ^/api/auth/login
+      security: false
+    api:
+      pattern: ^/api
+      security: false
