@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Payments\Infrastructure\Controller;
 
 use App\Payments\Application\Dto\CreatePaymentRequest;
-use App\Payments\Application\Handler\CreatePaymentHandler;
+use App\Payments\Application\Service\CreatePaymentIdempotency;
 use App\Payments\Domain\Repository\PaymentRepositoryInterface;
 use App\Payments\Infrastructure\Presenter\PaymentPresenter;
 use InvalidArgumentException;
@@ -19,7 +19,7 @@ final readonly class PaymentController
 {
     public function __construct(
         private PaymentRepositoryInterface $payments,
-        private CreatePaymentHandler $createPaymentHandler,
+        private CreatePaymentIdempotency $createPayment,
         private PaymentPresenter $presenter,
     ) {
     }
@@ -28,7 +28,7 @@ final readonly class PaymentController
     public function create(#[MapRequestPayload] CreatePaymentRequest $dto, Request $request): JsonResponse
     {
         $idempotencyKey = $request->headers->get('Idempotency-Key');
-        $result = $this->createPaymentHandler->handle($dto, $idempotencyKey);
+        $result = $this->createPayment->create($dto, $idempotencyKey);
 
         $statusCode = $result->replayed ? 200 : 201;
         return new JsonResponse(
