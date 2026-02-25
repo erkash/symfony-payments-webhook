@@ -111,12 +111,12 @@ final class WebhookEvent
         return $this->processedAt !== null;
     }
 
-	public function markProcessed(): void
-	{
-		if ($this->processedAt !== null) {
-			return;
-		}
+    public function markProcessed(): void
+    {
+        if ($this->processedAt !== null) {
+            return;
+        }
 
-		$this->processedAt = new DateTimeImmutable();
-	}
+        $this->processedAt = new DateTimeImmutable();
+    }
 }
